@@ -76,7 +76,7 @@ export default function Home() {
               {result.isAd ? 'Ad' : 'Not an Ad'}
             </span>
             <span className="text-zinc-500 dark:text-zinc-400 text-sm">
-              {Math.round(result.confidence * 100)}% confidence
+              {Math.round(result.confidence * 100)}% chance this is a paid ad
             </span>
           </div>
         )}
