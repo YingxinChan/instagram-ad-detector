@@ -1,0 +1,3 @@
+[submodule "model-server"]
+	path = model-server
+	url = https://github.com/ClaireYAhn/undisclosed-ad-detector.git
