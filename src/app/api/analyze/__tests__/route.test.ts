@@ -55,3 +55,17 @@ test('returns 500 when ANALYZE_API_URL is not set', async () => {
   const response = await POST(request)
   expect(response.status).toBe(500)
 })
+
+test('returns 502 when upstream fetch fails', async () => {
+  const mockFetch = jest.fn().mockRejectedValue(new Error('Network error'))
+  global.fetch = mockFetch as any
+
+  const request = new NextRequest('http://localhost/api/analyze', {
+    method: 'POST',
+    body: JSON.stringify({ embedCode: 'test' }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  const response = await POST(request)
+  expect(response.status).toBe(502)
+})

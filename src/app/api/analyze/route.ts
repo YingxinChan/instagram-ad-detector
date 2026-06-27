@@ -6,14 +6,18 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'API URL not configured' }, { status: 500 })
   }
 
-  const body = await request.json()
+  try {
+    const body = await request.json()
 
-  const upstream = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
+    const upstream = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
 
-  const data = await upstream.json()
-  return Response.json(data, { status: upstream.status })
+    const data = await upstream.json()
+    return Response.json(data, { status: upstream.status })
+  } catch {
+    return Response.json({ error: 'Analysis failed' }, { status: 502 })
+  }
 }
