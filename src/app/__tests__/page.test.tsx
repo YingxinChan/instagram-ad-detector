@@ -1,17 +1,24 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Home from '../page'
 
+const mockFetch = jest.fn()
+
+beforeAll(() => {
+  Object.defineProperty(global, 'fetch', {
+    value: mockFetch,
+    writable: true,
+    configurable: true,
+  })
+})
+
 beforeEach(() => {
-  jest.spyOn(global, 'fetch').mockResolvedValue(
+  mockFetch.mockReset()
+  mockFetch.mockResolvedValue(
     new Response(JSON.stringify({ isAd: false, confidence: 0.87 }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   )
-})
-
-afterEach(() => {
-  jest.restoreAllMocks()
 })
 
 test('renders textarea and disabled analyze button', () => {
@@ -45,7 +52,7 @@ test('shows result badge and confidence after successful analysis', async () => 
 })
 
 test('shows error message on API failure', async () => {
-  jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'))
+  mockFetch.mockRejectedValue(new Error('Network error'))
   render(<Home />)
   fireEvent.change(
     screen.getByPlaceholderText('Paste Instagram embed code here…'),

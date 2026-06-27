@@ -6,9 +6,14 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'API URL not configured' }, { status: 500 })
   }
 
+  let body: unknown
   try {
-    const body = await request.json()
+    body = await request.json()
+  } catch {
+    return Response.json({ error: 'Invalid request body' }, { status: 400 })
+  }
 
+  try {
     const upstream = await fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
