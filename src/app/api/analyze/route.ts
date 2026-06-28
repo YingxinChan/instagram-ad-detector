@@ -1,15 +1,5 @@
 import { NextRequest } from 'next/server'
 
-const PERMALINK_RE = /data-instgrm-permalink="([^"?]+)/i
-
-async function fetchCaptionFromOEmbed(permalink: string, token: string): Promise<string> {
-  const url = `https://graph.facebook.com/v18.0/instagram_oembed?url=${encodeURIComponent(permalink)}&fields=title,author_name&access_token=${encodeURIComponent(token)}`
-  const res = await fetch(url)
-  if (!res.ok) return ''
-  const data = await res.json()
-  return data.title ?? ''
-}
-
 export async function POST(request: NextRequest) {
   const apiUrl = process.env.ANALYZE_API_URL
   if (!apiUrl) {
@@ -23,25 +13,9 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  let upstream_body: Record<string, string>
-
-  if (body.embedCode) {
-    const token = process.env.INSTAGRAM_ACCESS_TOKEN
-    let caption = ''
-
-    if (token) {
-      const match = body.embedCode.match(PERMALINK_RE)
-      if (match) {
-        const permalink = match[1].replace(/&amp;/g, '&')
-        caption = await fetchCaptionFromOEmbed(permalink, token)
-      }
-    }
-
-    upstream_body = caption
-      ? { caption, embed: body.embedCode }
-      : { embed: body.embedCode }
-  } else {
-    upstream_body = { caption: body.caption ?? '' }
+  const upstream_body = {
+    caption: body.caption ?? '',
+    ...(body.embedCode ? { embed: body.embedCode } : {}),
   }
 
   try {
