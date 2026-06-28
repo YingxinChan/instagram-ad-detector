@@ -1,37 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Fine Print
 
-## Getting Started
+**Making influencer promotions as transparent as online payments.**
 
-First, run the development server:
+The Fine Print checks whether an Instagram post is likely a paid partnership and
+shows the signals behind the call — so people can judge sponsored content for
+themselves. Built at the Wise × HuddleHive Women in Tech Hackathon.
+
+## Why it matters
+
+Sponsorship disclosure on social media is inconsistent. Per the UK advertising
+regulator, only 57% of influencer ads met disclosure rules, 9% used unclear
+wording, and 34% had no disclosure at all. The Fine Print surfaces those gaps
+the way Wise surfaces hidden fees: by making the hidden visible.
+
+## How it works
+
+1. **Frontend** (`src/app/page.tsx`) — a Next.js page where you paste an
+   Instagram embed code.
+2. **API route** (`src/app/api/analyze/route.ts`) — forwards the post to the
+   analysis service set in `ANALYZE_API_URL` and normalises the response into a
+   verdict, a confidence score, and a list of signals.
+3. **Result** — shown as a disclosure label: a verdict chip, a confidence meter,
+   and the transparency signals that drove the assessment.
+
+## Getting the embed code
+
+1. Open the post on Instagram in a desktop browser (instagram.com).
+2. Click the `•••` menu at the top-right of the post.
+3. Choose **Embed**.
+4. Click **Copy embed code**.
+5. Paste it into the app and hit Analyze.
+
+> Embed is only offered on the desktop web and won't appear for some private
+> accounts.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Set the analysis backend before running:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# .env.local
+ANALYZE_API_URL=https://your-analysis-endpoint
+```
 
-## Learn More
+## Test
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# instagram-ad-detector
+Next.js 16 · React 19 · TypeScript · Tailwind CSS v4 · Jest + Testing Library
