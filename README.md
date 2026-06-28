@@ -1,8 +1,8 @@
-# The Fine Print
+# AdLens
 
-**Making influencer promotions as transparent as online payments.**
+**Making influencer promotions transparent.**
 
-The Fine Print checks whether an Instagram post is likely a paid partnership and
+AdLens checks whether an Instagram post is likely a paid partnership and
 shows the signals behind the call — so people can judge sponsored content for
 themselves. Built at the Wise × HuddleHive Women in Tech Hackathon.
 
@@ -10,13 +10,13 @@ themselves. Built at the Wise × HuddleHive Women in Tech Hackathon.
 
 Sponsorship disclosure on social media is inconsistent. Per the UK advertising
 regulator, only 57% of influencer ads met disclosure rules, 9% used unclear
-wording, and 34% had no disclosure at all. The Fine Print surfaces those gaps
+wording, and 34% had no disclosure at all. AdLens surfaces those gaps
 the way Wise surfaces hidden fees: by making the hidden visible.
 
 ## How it works
 
 1. **Frontend** (`src/app/page.tsx`) — a Next.js page where you paste an
-   Instagram embed code.
+   Instagram embed code, the caption text, or both.
 2. **API route** (`src/app/api/analyze/route.ts`) — forwards the post to the
    analysis service set in `ANALYZE_API_URL` and normalises the response into a
    verdict, a confidence score, and a list of signals.
