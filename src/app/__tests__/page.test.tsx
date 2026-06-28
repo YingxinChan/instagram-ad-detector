@@ -82,7 +82,7 @@ test('shows error message on API failure', async () => {
   await waitFor(() => {
     expect(
       screen.getByText(
-        'Something went wrong reading that post. Check the embed code and try again.'
+        'Something went wrong reading that post. Check your input and try again.'
       )
     ).toBeInTheDocument()
   })

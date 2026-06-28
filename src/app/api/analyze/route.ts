@@ -13,9 +13,10 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const upstream_body = body.embedCode
-    ? { embed: body.embedCode }
-    : { caption: body.caption ?? '' }
+  const upstream_body = {
+    caption: body.caption ?? '',
+    ...(body.embedCode ? { embed: body.embedCode } : {}),
+  }
 
   try {
     const upstream = await fetch(apiUrl, {

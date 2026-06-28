@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Fine Print — Instagram sponsorship check",
+  title: "AdLens — Instagram sponsorship check",
   description:
-    "Paste an Instagram embed and see whether a post is likely a paid partnership, with the signals behind the call. Making influencer promotions as transparent as online payments.",
+    "Paste an Instagram post and see whether it is likely a paid partnership, with the signals behind the call. Making influencer promotions transparent.",
 };
 
 export default function RootLayout({
