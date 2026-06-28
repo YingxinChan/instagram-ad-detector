@@ -59,3 +59,6 @@ npm test
 ## Stack
 
 Next.js 16 · React 19 · TypeScript · Tailwind CSS v4 · Jest + Testing Library
+
+## Demo Link
+https://youtu.be/RDc2H2MOhnA
