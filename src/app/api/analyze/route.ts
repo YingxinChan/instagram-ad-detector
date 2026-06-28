@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'API URL not configured' }, { status: 500 })
   }
 
-  let body: { embedCode?: string; caption?: string }
+  let body: { embedCode?: string; caption?: string; hashtags?: string }
   try {
     body = await request.json()
   } catch {
@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
 
   const upstream_body = {
     caption: body.caption ?? '',
+    ...(body.hashtags ? { hashtags: body.hashtags } : {}),
     ...(body.embedCode ? { embed: body.embedCode } : {}),
   }
 
@@ -31,6 +32,8 @@ export async function POST(request: NextRequest) {
       confidence: data.ml?.prob_sponsored ?? 0,
       verdict: data.verdict,
       reasons: data.rules?.reasons ?? [],
+      analysis: data.analysis ?? null,
+      analysisSource: data.analysis_source ?? null,
     }, { status: upstream.status })
   } catch {
     return Response.json({ error: 'Analysis failed' }, { status: 502 })

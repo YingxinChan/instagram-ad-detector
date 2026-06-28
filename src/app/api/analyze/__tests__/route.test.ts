@@ -26,10 +26,16 @@ afterEach(() => {
 
 test('forwards embedCode to ANALYZE_API_URL and returns response', async () => {
   mockFetch.mockResolvedValue(
-    new Response(JSON.stringify({ isAd: true, confidence: 0.94 }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    new Response(
+      JSON.stringify({
+        ml: { is_sponsored: true, prob_sponsored: 0.94 },
+        verdict: '🔴 Undisclosed ad suspected',
+        rules: { reasons: ['discount code: GLOW20'] },
+        analysis: 'This looks like an undisclosed ad.',
+        analysis_source: 'llm',
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    )
   )
 
   const request = new NextRequest('http://localhost/api/analyze', {
@@ -45,11 +51,43 @@ test('forwards embedCode to ANALYZE_API_URL and returns response', async () => {
     FAKE_URL,
     expect.objectContaining({
       method: 'POST',
-      body: JSON.stringify({ embedCode: '<blockquote>test</blockquote>' }),
+      body: JSON.stringify({ caption: '', embed: '<blockquote>test</blockquote>' }),
     })
   )
-  expect(data).toEqual({ isAd: true, confidence: 0.94 })
+  expect(data).toEqual({
+    isAd: true,
+    confidence: 0.94,
+    verdict: '🔴 Undisclosed ad suspected',
+    reasons: ['discount code: GLOW20'],
+    analysis: 'This looks like an undisclosed ad.',
+    analysisSource: 'llm',
+  })
   expect(response.status).toBe(200)
+})
+
+test('forwards hashtags to the upstream API when provided', async () => {
+  mockFetch.mockResolvedValue(
+    new Response(JSON.stringify({ ml: { is_sponsored: true, prob_sponsored: 0.8 } }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  )
+
+  const request = new NextRequest('http://localhost/api/analyze', {
+    method: 'POST',
+    body: JSON.stringify({ caption: 'loving this', hashtags: '#ad #skincare' }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  await POST(request)
+
+  expect(mockFetch).toHaveBeenCalledWith(
+    FAKE_URL,
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ caption: 'loving this', hashtags: '#ad #skincare' }),
+    })
+  )
 })
 
 test('returns 500 when ANALYZE_API_URL is not set', async () => {

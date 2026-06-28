@@ -7,6 +7,8 @@ type AnalysisResult = {
   confidence: number
   verdict?: string
   reasons?: string[]
+  analysis?: string | null
+  analysisSource?: 'llm' | 'fallback' | null
 }
 
 export default function Home() {
@@ -185,6 +187,18 @@ export default function Home() {
                   />
                 </div>
               </div>
+
+              {/* Plain-English analysis (LLM, with rule-based fallback) */}
+              {result.analysis && (
+                <div className="flex flex-col gap-2">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+                    In plain English
+                  </span>
+                  <p className="rounded-xl bg-zinc-50 border border-[var(--rule)] px-4 py-3 text-sm leading-relaxed text-zinc-700">
+                    {result.analysis}
+                  </p>
+                </div>
+              )}
 
               {/* Transparency signals */}
               <div className="flex flex-col gap-2">
